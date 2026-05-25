@@ -1,5 +1,8 @@
 環境構築
 https://zenn.dev/yamato_snow/articles/616ba7f7594055
 
+デバッグ
+error_log('array: ' . print_r('hoge------------------', true));
+
 memo
 ・PDO
