@@ -9,7 +9,7 @@ $(function () {
       //通信成功時の処理
       $.each(orders, function (i, order) {
         $orders.append(
-          "<li>name: " + order.name + ", drink: " + order.drink + "</li>",
+          "<li>id: " + order.id + ", title: " + order.title + "</li>",
         ); //eachで回してorderそれぞれの要素をorder.name / order.drinkとして出力
       });
     },
