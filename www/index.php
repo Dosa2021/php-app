@@ -7,11 +7,7 @@
 <body>
     <main>
         <h1>PHP APP</h1>
-        <ul>
-            <li>1: 佐藤</li>
-            <li>2: 鈴木</li>
-            <li>3: 菅原</li>
-        </ul>
+        <ul id="orders"></ul>
     </main>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="js/index.js"></script>
