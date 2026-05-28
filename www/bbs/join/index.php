@@ -1,4 +1,6 @@
 <?php
+    session_start();
+
     $form = [
         'name' => '',
         'email' => '',
@@ -23,6 +25,32 @@
             $error['password'] = 'blank';
         } elseif (strlen($form['password'] < 4)) {
             $error['password'] = 'length';
+        }
+
+        $image = $_FILES['image'];
+        if ($image['name'] !== '' && $image['error'] === 0) {
+            $type = mime_content_type($image['tmp_name']);
+            if ($type !== 'image/png' && $type !== 'image/jpge') {
+                $error['image'] = 'type';
+            }
+        }
+
+        if (empty($error)) {
+            $_SESSION['form'] = $form;
+
+            // 画像のアップロード
+            if ($image['name'] !== '') {
+                $filename = date('YmdHis') . '_' . $image['name'];
+                if (!move_uploaded_file($image['tmp_name'], '../member_picture/' . $filename)) {
+                    die('ファイルアップロードに失敗しました。');
+                }
+                $_SESSION['form']['image'] = $filename;
+            } else {
+                $_SESSION['form']['image'] = '';
+            }
+
+            header('Location: check.php');
+            exit();
         }
     }
 ?>
@@ -72,7 +100,9 @@
                 <dt>写真など</dt>
                 <dd>
                     <input type="file" name="image" size="35" value=""/>
-                    <p class="error">* 写真などは「.png」または「.jpg」の画像を指定してください</p>
+                    <?php if (isset($error['image']) && $error['image'] === 'type'): ?>
+                        <p class="error">* 写真などは「.png」または「.jpg」の画像を指定してください</p>
+                    <?php endif; ?>
                     <p class="error">* 恐れ入りますが、画像を改めて指定してください</p>
                 </dd>
             </dl>
