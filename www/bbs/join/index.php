@@ -1,10 +1,29 @@
 <?php
-    $form = [];
+    $form = [
+        'name' => '',
+        'email' => '',
+        'password' => ''
+    ];
     $error = [];
 
-    $form['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
-    if ($form['name'] === '') {
-        $error['name'] = 'blank';
+    function h($value) {
+        return htmlspecialchars($value, ENT_QUOTES);
+    }
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $form['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+        if ($form['name'] === '') {
+            $error['name'] = 'blank';
+        }
+        $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS);
+        if ($form['email'] === '') {
+            $error['email'] = 'blank';
+        }
+        $form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
+        if ($form['password'] === '') {
+            $error['password'] = 'blank';
+        } elseif (strlen($form['password'] < 4)) {
+            $error['password'] = 'length';
+        }
     }
 ?>
 
@@ -28,21 +47,27 @@
             <dl>
                 <dt>ニックネーム<span class="required">必須</span></dt>
                 <dd>
-                    <input type="text" name="name" size="35" maxlength="255" value="<?php echo htmlspecialchars($form['name'], ENT_QUOTES); ?>"/>
+                    <input type="text" name="name" size="35" maxlength="255" value="<?php echo h($form['name']); ?>"/>
                     <?php if (isset($error['name']) && $error['name'] === 'blank'): ?>
                         <p class="error">* ニックネームを入力してください</p>
                     <?php endif; ?>
                 </dd>
                 <dt>メールアドレス<span class="required">必須</span></dt>
                 <dd>
-                    <input type="text" name="email" size="35" maxlength="255" value=""/>
-                    <p class="error">* メールアドレスを入力してください</p>
+                    <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($form['email']); ?>"/>
+                    <?php if (isset($error['email']) && $error['email'] === 'blank'): ?>
+                        <p class="error">* メールアドレスを入力してください</p>
+                    <?php endif; ?>
                     <p class="error">* 指定されたメールアドレスはすでに登録されています</p>
                 <dt>パスワード<span class="required">必須</span></dt>
                 <dd>
                     <input type="password" name="password" size="10" maxlength="20" value=""/>
-                    <p class="error">* パスワードを入力してください</p>
-                    <p class="error">* パスワードは4文字以上で入力してください</p>
+                    <?php if (isset($error['password']) && $error['password'] === 'blank'): ?>
+                        <p class="error">* パスワードを入力してください</p>
+                    <?php endif; ?>
+                    <?php if (isset($error['password']) && $error['password'] === 'length'): ?>
+                        <p class="error">* パスワードは4文字以上で入力してください</p>
+                    <?php endif; ?>
                 </dd>
                 <dt>写真など</dt>
                 <dd>
