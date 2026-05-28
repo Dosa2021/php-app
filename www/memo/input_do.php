@@ -10,6 +10,7 @@
     $ret = $stmt->execute();
     if ($ret) :
         echo 'insert 成功';
+        echo '<br /><a href="index.php">トップへ戻る</a>';
     else: 
         $db->error;
     endif;
