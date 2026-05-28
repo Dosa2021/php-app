@@ -13,7 +13,6 @@
       if (!$id) {
         echo '不正なidです';
         exit;
-
       }
 
       $stmt->bind_param('i', $id);
@@ -24,7 +23,9 @@
     ?>
 
     <div>
-      <?php echo htmlspecialchars($memo); ?>
+      <pre><?php echo htmlspecialchars($memo); ?></pre>
     </div>
+    <a href="update.php?id=<?php echo $id; ?>">編集</a>
+    <a href="/memo">一覧へ</a>
   </body>
 </html>
