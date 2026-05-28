@@ -1,15 +1,18 @@
 <?php
 require('db_connect.php');
 
-// $memos = $db->query('SELECT * FROM `memos` ORDER BY id DESC limit 0, 5;'); 
-// if (!$memos):
-//   die($db->error);
-// endif;
-$stmt = $db->prepare('SELECT * FROM `memos` ORDER BY id DESC limit ?, 5;'); 
-$page = 5;
-$stmt->bind_param('s', $page);
-$stmt->execute();
+// 最大ページ数を求める
+$counts = $db->query('SELECT COUNT(*) as cnt FROM `memos`;'); 
+$count = $counts->fetch_assoc();
+$max_page = floor(($count['cnt'] + 1) / 5 + 1);
 
+$stmt = $db->prepare('SELECT * FROM `memos` ORDER BY id DESC limit ?, 5;'); 
+$page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT);
+$page = ($page ? : 1);
+$start = ($page - 1) * 5;
+
+$stmt->bind_param('s', $start);
+$result = $stmt->execute();
 ?>
 
 <!doctype html>
@@ -22,6 +25,10 @@ $stmt->execute();
   <body>
     <h1>メモ帳</h1>
     <p>-> <a href="input.html">新しいメモ</a></p>
+
+    <?php if (!$result): ?>
+      <p>表示するリストがありません。</p>
+    <?php endif; ?>
 
     <?php $stmt->bind_result($id, $memo, $created) ?>
     <?php while ($stmt->fetch()): ?>
@@ -36,5 +43,13 @@ $stmt->execute();
         </time>
       </div>
     <?php endwhile; ?>
+    <p>
+      <?php if ($page > 1): ?>
+        <a href="?page=<?php echo $page - 1; ?>"><?php echo $page - 1; ?>ページ目へ</a>
+      <?php endif; ?>
+      <?php if ($page < $max_page): ?>
+        <a href="?page=<?php echo $page + 1; ?>"><?php echo $page + 1; ?>ページ目へ</a>
+      <?php endif; ?>
+    </p>
   </body>
 </html>
