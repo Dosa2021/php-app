@@ -1,5 +1,6 @@
 <?php
-$db = new mysqli('mysql:3306', 'root', 'root_password', 'mydb');
+require('db_connect.php');
+
 $memos = $db->query('SELECT * FROM `memos` ORDER BY id DESC;'); 
 if (!$memos):
   die($db->error);
