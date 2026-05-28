@@ -1,29 +1,37 @@
+<?php
+    $form = [];
+    $error = [];
+
+    $form['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+    if ($form['name'] === '') {
+        $error['name'] = 'blank';
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>会員登録</title>
-
     <link rel="stylesheet" href="../style.css"/>
 </head>
-
 <body>
 <div id="wrap">
     <div id="head">
         <h1>会員登録</h1>
     </div>
-
     <div id="content">
         <p>次のフォームに必要事項をご記入ください。</p>
         <form action="" method="post" enctype="multipart/form-data">
             <dl>
                 <dt>ニックネーム<span class="required">必須</span></dt>
                 <dd>
-                    <input type="text" name="name" size="35" maxlength="255" value=""/>
-                    <p class="error">* ニックネームを入力してください</p>
+                    <input type="text" name="name" size="35" maxlength="255" value="<?php echo htmlspecialchars($form['name'], ENT_QUOTES); ?>"/>
+                    <?php if (isset($error['name']) && $error['name'] === 'blank'): ?>
+                        <p class="error">* ニックネームを入力してください</p>
+                    <?php endif; ?>
                 </dd>
                 <dt>メールアドレス<span class="required">必須</span></dt>
                 <dd>
