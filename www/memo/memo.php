@@ -26,6 +26,7 @@
       <pre><?php echo htmlspecialchars($memo); ?></pre>
     </div>
     <a href="update.php?id=<?php echo $id; ?>">編集</a>
-    <a href="/memo">一覧へ</a>
+    <a href="delete.php?id=<?php echo $id; ?>">削除</a>
+    <a href="/memo">一覧</a>
   </body>
 </html>
