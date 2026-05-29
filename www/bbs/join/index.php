@@ -25,10 +25,27 @@
         if ($form['name'] === '') {
             $error['name'] = 'blank';
         }
+
         $form['email'] = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_SPECIAL_CHARS);
         if ($form['email'] === '') {
             $error['email'] = 'blank';
+        } else {
+            // メールアドレスの重複チェック
+            $db = dbConnect();
+            $stmt = $db->prepare('SELECT COUNT(*) FROM `members` WHERE email = ?;');
+            $stmt->bind_param('s', $form['email']);
+            $result = $stmt->execute();
+            if (!$result) {
+                die($db->error);
+            }
+
+            $stmt->bind_result($cnt);
+            $stmt->fetch();
+            if ($cnt > 0) {
+                $error['email'] = 'duplicate';
+            }
         }
+
         $form['password'] = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_SPECIAL_CHARS);
         if ($form['password'] === '') {
             $error['password'] = 'blank';
@@ -96,7 +113,9 @@
                     <?php if (isset($error['email']) && $error['email'] === 'blank'): ?>
                         <p class="error">* メールアドレスを入力してください</p>
                     <?php endif; ?>
-                    <p class="error">* 指定されたメールアドレスはすでに登録されています</p>
+                    <?php if (isset($error['email']) && $error['email'] === 'duplicate'): ?>
+                        <p class="error">* 指定されたメールアドレスはすでに登録されています</p>
+                    <?php endif; ?>
                 <dt>パスワード<span class="required">必須</span></dt>
                 <dd>
                     <input type="password" name="password" size="10" maxlength="20" value=""/>

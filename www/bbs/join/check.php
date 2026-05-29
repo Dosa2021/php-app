@@ -11,7 +11,7 @@
 	}
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		$db = new mysqli('mysql:3306', 'root', 'root_password', 'min_bbs');
+		$db = dbConnect();
 		if (!$db) {
 			die($db->error);
 		}
