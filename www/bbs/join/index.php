@@ -2,16 +2,24 @@
     session_start();
     require('../lib/lib.php');
 
-    $form = [
-        'name' => '',
-        'email' => '',
-        'password' => ''
-    ];
+    $form = [];
     $error = [];
+
+    // 「書き直す」機能
+    if (isset($_GET['action']) && $_GET['action'] === 'rewrite' && isset($_SESSION['form'])) {
+        $form = $_SESSION['form'];
+    } else {
+        $form = [
+            'name' => '',
+            'email' => '',
+            'password' => ''
+        ];
+    }
 
     function h($value) {
         return htmlspecialchars($value, ENT_QUOTES);
     }
+
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $form['name'] = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
         if ($form['name'] === '') {
