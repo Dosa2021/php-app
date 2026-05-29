@@ -2,16 +2,18 @@
     require('lib/lib.php');
     session_start();
 
-    $db = dbConnect();
+    $id = 0;
+    $name = '';
 
     if (isset($_SESSION['id']) && isset($_SESSION['name'])) {
-        $id = $_SESSION['id'];
+        $user_id = $_SESSION['id'];
         $name = $_SESSION['name'];
     } else {
         header('Location: login.php');
         exit();
     }
 
+    $db = dbConnect();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // メッセージ投稿
         $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -20,7 +22,7 @@
             die($db->error);
         }
 
-        $stmt->bind_param('si', $message, $id);
+        $stmt->bind_param('si', $message, $user_id);
         $result = $stmt->execute();
         if (!$result) {
             die($db->error);
@@ -85,8 +87,10 @@
             if (!$stmt) {
                 die($db->error);
             }
+            var_dump('id-------');
+            var_dump($user_id);
 
-            $stmt->bind_param('i', $id);
+            $stmt->bind_param('i', $user_id);
             $result = $stmt->execute();
             if (!$result) {
                 die($db->error);
@@ -111,7 +115,7 @@
                         <?php echo specialChars($name); ?>さん
                     </span></p>
                 <p class="day">
-                    <a href="view.php?id=">
+                    <a href="view.php?id=<?php echo specialChars($id); ?>">
                         <?php echo specialChars($created); ?>
                     </a>
                     [<a href="delete.php?id=" style="color: #F33;">削除</a>]
