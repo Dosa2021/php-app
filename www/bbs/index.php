@@ -1,3 +1,15 @@
+<?php
+    require('lib/lib.php');
+    session_start();
+
+    if (isset($_SESSION['id']) && isset($_SESSION['name'])) {
+        $name = $_SESSION['name'];
+    } else {
+        header('Location: login.php');
+        exit();
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -19,7 +31,10 @@
         <div style="text-align: right"><a href="logout.php">ログアウト</a></div>
         <form action="" method="post">
             <dl>
-                <dt>○○さん、メッセージをどうぞ</dt>
+                <dt>
+                    <?php echo specialChars($name); ?>さん、
+                    メッセージをどうぞ
+                </dt>
                 <dd>
                     <textarea name="message" cols="50" rows="5"></textarea>
                 </dd>
@@ -33,7 +48,9 @@
 
         <div class="msg">
             <img src="member_picture/" width="48" height="48" alt=""/>
-            <p>○○<span class="name">（○○）</span></p>
+            <p>○○<span class="name">
+                <?php echo specialChars($name); ?>さん
+            </span></p>
             <p class="day"><a href="view.php?id=">2021/01/01 00:00:00</a>
                 [<a href="delete.php?id=" style="color: #F33;">削除</a>]
             </p>
