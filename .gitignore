@@ -1,3 +1,2 @@
-docker-compose up
-
 mysql-data
+www/bbs/member_picture
