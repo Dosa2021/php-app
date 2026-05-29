@@ -1,5 +1,6 @@
 <?php
     session_start();
+    require('../lib/lib.php');
 
     $form = [
         'name' => '',
@@ -29,8 +30,9 @@
 
         $image = $_FILES['image'];
         if ($image['name'] !== '' && $image['error'] === 0) {
+            // Note: 非推奨
             $type = mime_content_type($image['tmp_name']);
-            if ($type !== 'image/png' && $type !== 'image/jpge') {
+            if ($type !== 'image/png' && $type !== 'image/jpeg') {
                 $error['image'] = 'type';
             }
         }
@@ -75,14 +77,14 @@
             <dl>
                 <dt>ニックネーム<span class="required">必須</span></dt>
                 <dd>
-                    <input type="text" name="name" size="35" maxlength="255" value="<?php echo h($form['name']); ?>"/>
+                    <input type="text" name="name" size="35" maxlength="255" value="<?php echo specialChars($form['name']); ?>"/>
                     <?php if (isset($error['name']) && $error['name'] === 'blank'): ?>
                         <p class="error">* ニックネームを入力してください</p>
                     <?php endif; ?>
                 </dd>
                 <dt>メールアドレス<span class="required">必須</span></dt>
                 <dd>
-                    <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($form['email']); ?>"/>
+                    <input type="text" name="email" size="35" maxlength="255" value="<?php echo specialChars($form['email']); ?>"/>
                     <?php if (isset($error['email']) && $error['email'] === 'blank'): ?>
                         <p class="error">* メールアドレスを入力してください</p>
                     <?php endif; ?>
