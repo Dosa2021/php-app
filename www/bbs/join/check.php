@@ -21,11 +21,14 @@
 			die($db->error);
 		}
 
-		$stmt->bind_param('ssss', $form['name'], $form['email'], $form['password'], $form['image']);
+		$password = password_hash($form['password'], PASSWORD_DEFAULT);
+		$stmt->bind_param('ssss', $form['name'], $form['email'], $password, $form['image']);
 		$result = $stmt->execute();
 		if (!$result) {
 			die($db->error);
 		}
+		unset($_SESSION['form']);
+		header('Location: thanks.php');
 	}
 ?>
 
