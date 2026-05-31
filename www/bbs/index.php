@@ -82,15 +82,12 @@
                     posts as p,
                     members as m
                 WHERE
-                    ? = p.member_id;
+                    m.id = p.member_id;
             ');
             if (!$stmt) {
                 die($db->error);
             }
-            var_dump('id-------');
-            var_dump($user_id);
 
-            $stmt->bind_param('i', $user_id);
             $result = $stmt->execute();
             if (!$result) {
                 die($db->error);
@@ -118,7 +115,12 @@
                     <a href="view.php?id=<?php echo specialChars($id); ?>">
                         <?php echo specialChars($created); ?>
                     </a>
-                    [<a href="delete.php?id=" style="color: #F33;">削除</a>]
+
+                    <?php
+                        if ($_SESSION['id'] === $member_id): 
+                    ?>
+                        [<a href="delete.php?id=<?php echo specialChars($id); ?>" style="color: #F33;">削除</a>]
+                    <?php endif; ?>
                 </p>
             </div>
         <?php endwhile; ?>
