@@ -20,8 +20,15 @@
     }
 
     $db = dbConnect();
-    $stmt = $db->prepare('DELETE FROM posts WHERE id = ? limit 1;');
-    $stmt->bind_param('i', $post_id);
+    $stmt = $db->prepare('
+        DELETE
+            FROM posts
+        WHERE
+            id = ? AND
+            member_id = ?
+        LIMIT 1;
+    ');
+    $stmt->bind_param('ii', $post_id, $id);
     $result = $stmt->execute();
     if (!$result) {
         die($db->error);
